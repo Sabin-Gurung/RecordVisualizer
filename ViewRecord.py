@@ -18,6 +18,7 @@ from PyQt5.QtWidgets import QTableView
 from PyQt5.QtWidgets import QAbstractItemView
 from PyQt5.QtWidgets import QFileDialog
 from PyQt5.QtWidgets import QMessageBox
+from PyQt5.QtWidgets import QGroupBox
 
 from PyQt5.QtGui import QStandardItemModel
 from PyQt5.QtGui import QStandardItem
@@ -59,20 +60,30 @@ class ViewRecord (QWidget):
 		hbox.addWidget (self.eraseAllRecordButton)
 		hbox.addStretch (1)
 
+		editdbGroupBox = QGroupBox ("Modify DataBase")
+		editdbGroupBox.setLayout (hbox)
+
+		searchGroupBox = QGroupBox ("Search")
+		searchBox = QHBoxLayout ()
+		searchBox.addWidget (self.searchButton)
+		searchGroupBox.setLayout (searchBox)
+
 		vbox = QVBoxLayout()
-		vbox.addLayout (hbox)
-		vbox.addWidget (self.searchButton)
+		vbox.addWidget (editdbGroupBox)
+		vbox.addWidget (searchGroupBox)
 		vbox.addWidget (self.tableView)
 
+		groupByBox = QGroupBox ("Group By")
 		groupByButtonsLayout = QVBoxLayout()
 		groupByButtonsLayout.addStretch (1)
 		groupByButtonsLayout.addWidget (self.occupationButton)
 		groupByButtonsLayout.addWidget (self.addressButton)
 		groupByButtonsLayout.addStretch (1)
+		groupByBox.setLayout (groupByButtonsLayout)
 
 		mainPanel = QHBoxLayout()
 		mainPanel.addLayout (vbox)
-		mainPanel.addLayout (groupByButtonsLayout)
+		mainPanel.addWidget (groupByBox)
 
 		self.setLayout (mainPanel)
 
@@ -125,7 +136,6 @@ class ViewRecord (QWidget):
 		print ("Opening view for displaying data grouped by occupation")
 		vo = ViewGroupBy (self.controller, "Occupation")
 		self.groupByViewsList.append (vo)
-
 
 	@pyqtSlot()
 	def slot_groupByAddress (self):
