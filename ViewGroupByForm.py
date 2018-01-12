@@ -23,6 +23,7 @@ from PyQt5.QtGui import QStandardItem
 
 
 import matplotlib.pyplot as plt
+import numpy as np
 
 
 class ViewGroupBy (QWidget):
@@ -37,6 +38,7 @@ class ViewGroupBy (QWidget):
 		self.headerName = headerName
 		self.makePieChartButton = QPushButton ("PieChart")
 		self.refreshButton      = QPushButton ("Refresh Data")
+		self.makeBarChartButton = QPushButton ("BarChart")
 
 		# table
 		self.tableView = QTableView()
@@ -52,6 +54,7 @@ class ViewGroupBy (QWidget):
 		buttonsLayout = QVBoxLayout()
 		buttonsLayout.addWidget (self.refreshButton)
 		buttonsLayout.addWidget (self.makePieChartButton)
+		buttonsLayout.addWidget (self.makeBarChartButton)
 
 		mainPanel = QHBoxLayout()
 		mainPanel.addLayout (tableLayout)
@@ -61,6 +64,7 @@ class ViewGroupBy (QWidget):
 
 		# signals and slots
 		self.makePieChartButton.clicked.connect (self.slot_makePieChart)
+		self.makeBarChartButton.clicked.connect (self.slot_makeBarChart)
 		self.refreshButton.clicked.connect      (self.slot_showData)
 
 		# container to store data
@@ -92,4 +96,26 @@ class ViewGroupBy (QWidget):
 
 		plt.pie (values, labels = labels, autopct = "%.2f")
 		plt.title ("Pie Chart : " + self.headerName)
+		plt.show()
+
+	@pyqtSlot()
+	def slot_makeBarChart (self):
+		labels = []
+		values = []
+		for i in self.data:
+			labels.append (i[0])
+			values.append (i[1])
+
+		y_pos = np.arange (len (labels))
+
+		plt.bar (y_pos, values)
+		plt.xticks (y_pos, labels, rotation = 90)
+
+		plt.xlabel (self.headerName)
+		plt.ylabel ("Quantity")
+
+		plt.title ("Bar Chart : " + self.headerName)
+
+		plt.tight_layout()
+
 		plt.show()
