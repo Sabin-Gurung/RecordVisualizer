@@ -3,11 +3,11 @@
 
 class Record():
 	def __init__ (self, name, surname, dateOfBirth, address, occupation):
-		self.__name       = name
-		self.__surname    = surname
-		self.__DOB        = dateOfBirth
-		self.__address    = address
-		self.__occupation = occupation
+		self.__name       = name.upper()
+		self.__surname    = surname.upper()
+		self.__DOB        = dateOfBirth.upper()
+		self.__address    = address.upper()
+		self.__occupation = occupation.upper()
 
 	def getData (self):
 		'''returns a list containing data in the right order'''

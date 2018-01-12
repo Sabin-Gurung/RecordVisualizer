@@ -2,6 +2,7 @@
 from Record import Record
 from Controller import Controller
 from ViewGroupByForm import ViewGroupBy
+from FormAddRecord import FormAddRecord
 
 import sys
 
@@ -116,7 +117,15 @@ class ViewRecord (QWidget):
 
 	@pyqtSlot()
 	def slot_addOneRecord (self):
-		QMessageBox.about (self, "Message",  "Need to implement an input form")
+	        a = FormAddRecord()
+	        a.exec_()
+	        print (a.success)
+	        if a.success:
+	            print ("Log: Data Are Valid")
+	            rc = Record (a.name.text(), a.surname.text(), a.dob.currentText (), a.address.text(), a.occupation.text())
+	            print (rc.getData())
+	            self.controller.addOneRecord (rc)
+
 
 	@pyqtSlot()
 	def slot_eraseAllRecord (self):
