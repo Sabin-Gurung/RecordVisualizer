@@ -1,0 +1,8 @@
+Farmer
+Student
+Writer
+Cook
+Teacher
+Fighter
+Wrestler
+Shopkeeper
