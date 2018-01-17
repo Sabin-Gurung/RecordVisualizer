@@ -8,6 +8,7 @@ import sys
 
 from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtCore import pyqtSignal
+from PyQt5.QtCore import Qt
 
 from PyQt5.QtWidgets import QWidget
 from PyQt5.QtWidgets import QPushButton
@@ -67,6 +68,8 @@ class ViewGroupBy (QWidget):
 		self.makeBarChartButton.clicked.connect (self.slot_makeBarChart)
 		self.refreshButton.clicked.connect      (self.slot_showData)
 
+		self.tableView.horizontalHeader().sectionClicked.connect (self.slot_tableHeaderClicked)
+
 		# container to store data
 		self.data = []
 
@@ -119,3 +122,12 @@ class ViewGroupBy (QWidget):
 		plt.tight_layout()
 
 		plt.show()
+
+	@pyqtSlot(int)
+	def slot_tableHeaderClicked (self, i):
+		ascending = (self.tableView.horizontalHeader().sortIndicatorSection() == i) and (self.tableView.horizontalHeader().sortIndicatorOrder() == Qt.AscendingOrder)
+		if (ascending) :
+		    self.model.sort (i, Qt.DescendingOrder)
+		else :
+		    self.model.sort (i, Qt.AscendingOrder)
+		print ("sorting by header" + Record.getHeaders() [i])

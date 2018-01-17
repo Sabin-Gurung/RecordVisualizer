@@ -8,6 +8,7 @@ import sys
 
 from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtCore import pyqtSignal
+from PyQt5.QtCore import Qt
 
 from PyQt5.QtWidgets import QWidget
 from PyQt5.QtWidgets import QPushButton
@@ -41,7 +42,8 @@ class ViewRecord (QWidget):
 		self.addRecordButton         = QPushButton ("Add Record")
 		self.addRecordFromFileButton = QPushButton ("Add Record From File")
 		self.eraseAllRecordButton    = QPushButton ("Erase All Record")
-		self.searchButton            = QPushButton ("Search")
+		self.searchButton            = QPushButton ("Refresh Data")
+		self.clearFilterButton       = QPushButton ("Clear")
 
 		# table
 		self.tableView = QTableView()
@@ -67,6 +69,7 @@ class ViewRecord (QWidget):
 		searchGroupBox = QGroupBox ("Search")
 		searchBox = QHBoxLayout ()
 		searchBox.addWidget (self.searchButton)
+		searchBox.addWidget (self.clearFilterButton)
 		searchGroupBox.setLayout (searchBox)
 
 		vbox = QVBoxLayout()
@@ -94,9 +97,12 @@ class ViewRecord (QWidget):
 		self.eraseAllRecordButton.clicked.connect    (self.slot_eraseAllRecord)
 
 		self.searchButton.clicked.connect            (self.slot_showData)
+		self.clearFilterButton.clicked.connect       (self.slot_clearFilter)
 
 		self.occupationButton.clicked.connect        (self.slot_groupByOccupation)
 		self.addressButton.clicked.connect           (self.slot_groupByAddress)
+
+		self.tableView.horizontalHeader().sectionClicked.connect (self.slot_tableHeaderClicked)
 
 		# setup
 		self.setGeometry (200, 100, 800, 600)
@@ -110,7 +116,6 @@ class ViewRecord (QWidget):
 		self.model.removeRows (0, self.model.rowCount())
 		# insert data in to table
 		data = self.controller.queryAllData()
-		#print (data)
 		for i, row in enumerate (data):
 			for j, item in enumerate (row):
 				self.model.setItem (i, j, QStandardItem (item))
@@ -152,5 +157,17 @@ class ViewRecord (QWidget):
 		va = ViewGroupBy (self.controller, "Address")
 		self.groupByViewsList.append (va)
 
+	@pyqtSlot()
+	def slot_clearFilter (self):
+		print ("clear filter left to implement")
+
+	@pyqtSlot(int)
+	def slot_tableHeaderClicked (self, i):
+		ascending = (self.tableView.horizontalHeader().sortIndicatorSection() == i) and (self.tableView.horizontalHeader().sortIndicatorOrder() == Qt.AscendingOrder)
+		if (ascending) :
+		    self.model.sort (i, Qt.DescendingOrder)
+		else :
+		    self.model.sort (i, Qt.AscendingOrder)
+		print ("sorting by header" + Record.getHeaders() [i])
 
 
